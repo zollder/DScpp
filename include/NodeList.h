@@ -8,7 +8,11 @@
 //#ifndef NODELIST_H_
 //#define NODELIST_H_
 
-#include "../include/List.h.txt"
+#include "exceptions/InvalidPositionException.h"
+#include "exceptions/EmptyContainerException.h"
+#include "exceptions/BoundaryViolationException.h"
+
+#include "stdio.h"
 #include <vector>
 
 using namespace::std;
@@ -219,6 +223,7 @@ class NodeList {
 				printf("%d ", node->value);
 				node = node->next;
 			}
+			printf("\n");
 		}
 };
 

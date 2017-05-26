@@ -5,7 +5,7 @@
  *      Author: zollder
  */
 
-# include "NodeList.cpp"
+#include "NodeList.h"
 
 template <class T> class NodeSequence : public NodeList<T> {
 

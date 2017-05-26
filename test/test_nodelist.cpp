@@ -8,7 +8,7 @@
 # include "stdio.h"
 # include "gtest/gtest.h"
 # include "exceptions/InvalidPositionException.h"
-# include "../src/NodeList.cpp"
+# include "../include/NodeList.h"
 
 	typedef NodeList<int> nList;
 	typedef nList::Position Position;

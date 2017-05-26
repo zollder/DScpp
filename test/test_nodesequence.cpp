@@ -1,14 +1,15 @@
 /*
- * test_factorial.cpp
+ * test_nodesequence.cpp
  *
  *  Created on: May 15, 2017
  *      Author: zollder
  */
 
-# include "stdio.h"
+# include "../include/NodeSequence.h"
+
 # include "gtest/gtest.h"
-# include "../src/NodeSequence.cpp"
-#include <vector>
+# include "stdio.h"
+# include <vector>
 
 	using namespace std;
 	typedef NodeSequence<int> nSequence;
