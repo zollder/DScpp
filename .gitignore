@@ -1,0 +1,7 @@
+/Release/
+/language.settings.xml
+*.project
+*.cproject
+*.settings
+Debug/*
+/Debug/
