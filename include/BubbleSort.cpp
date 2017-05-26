@@ -12,17 +12,23 @@ class BubbleSort {
 
 	public:
 
+		/**
+		 * Rank-based bubble-sort implementation.
+		 */
 		void bubbleSort1(NodeSequence& seq) {
 			int n = seq.size();
 			for (int i = 0; i < n; i++) {
 				for (int j = 1; j < n-i; j++) {
 					if (seq.getValueAtRank(j-1) > seq.getValueAtRank(j)) {
-						seq.swap(seq.getPosition(j), seq.getPosition(j-1));
+						seq.swap(seq.getPositionByRank(j), seq.getPositionByRank(j-1));
 					}
 				}
 			}
 		}
 
+		/**
+		 * Position-based bubble-sort implementation.
+		 */
 		void bubbleSort2(NodeSequence& seq) {
 			// use typename to instruct the compiler about member type access
 			typedef typename NodeSequence::Position Position;

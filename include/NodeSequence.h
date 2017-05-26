@@ -32,7 +32,7 @@ public:
 	/**
 	 * Returns position for specified rank.
 	 */
-	Position getPosition(int rank) const throw (BoundaryViolationException)	{
+	Position getPositionByRank(int rank) const throw (BoundaryViolationException)	{
 		validateRank(rank);
 		NodePtr node;
 		if (rank <= size()/2) {
@@ -43,8 +43,9 @@ public:
 			}
 		} else {
 			// search from trailer
-			for (int i = size(); i > 0; i--) {
-				node = this->trailer->prev;
+			node = this->trailer->prev;
+			for (int i = 1; i < size()-rank; i++) {
+				node = node->prev;
 			}
 		}
 		return Position(node);
@@ -53,7 +54,7 @@ public:
 	/**
 	 * Returns rank for specified position.
 	 */
-	int getRank(Position& position) const throw (InvalidPositionException) {
+	int getRankByPosition(Position& position) const throw (InvalidPositionException) {
 		NodePtr current = getNodePtr(first());
 		NodePtr required = getNodePtr(position);
 		int rank = 0;
@@ -69,7 +70,7 @@ public:
 
 	T getValueAtRank(int rank) const throw (BoundaryViolationException) {
 		validateRank(rank);
-		return getPosition(rank).getValue();
+		return getPositionByRank(rank).getValue();
 	}
 
 	void insertAtRank(int rank, T& value) throw (BoundaryViolationException) {
@@ -77,17 +78,17 @@ public:
 			this->insertLast(value);
 		} else {
 			validateRank(rank);
-			this->insertBefore(getPosition(rank), value);
+			this->insertBefore(getPositionByRank(rank), value);
 		}
 	}
 
 	void removeAtRank(int rank) throw (BoundaryViolationException) {
 		validateRank(rank);
-		this->remove(getPosition(rank));
+		this->remove(getPositionByRank(rank));
 	}
 
 	void replaceAtRank(int rank, T& value) throw (BoundaryViolationException) {
 		validateRank(rank);
-		this->replace(getPosition(rank), value);
+		this->replace(getPositionByRank(rank), value);
 	}
 };

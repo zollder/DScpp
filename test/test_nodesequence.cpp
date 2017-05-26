@@ -25,7 +25,7 @@
 		nSequence sequence;
 		sequence.insertFirst(5);
 		try {
-			sequence.getPosition(-1);
+			sequence.getPositionByRank(-1);
 			FAIL() << "Test failed";
 		} catch (const BoundaryViolationException& ex) {
 			EXPECT_EQ("Invalid rank", ex.getMessage());
@@ -36,7 +36,7 @@
 		nSequence sequence;
 		sequence.insertFirst(5);
 		try {
-			sequence.getPosition(2);
+			sequence.getPositionByRank(2);
 			FAIL() << "Test failed";
 		} catch (const BoundaryViolationException& ex) {
 			EXPECT_EQ("Invalid rank", ex.getMessage());
@@ -46,8 +46,8 @@
 	TEST(NodeSequenceTest, getPosition_ok) {
 		nSequence sequence;
 		sequence.addAll({1,2,3});
-		EXPECT_EQ(2, sequence.getPosition(1).getValue());
-		EXPECT_EQ(3, sequence.getPosition(2).getValue());
+		EXPECT_EQ(2, sequence.getPositionByRank(1).getValue());
+		EXPECT_EQ(3, sequence.getPositionByRank(2).getValue());
 	}
 
 	TEST(NodeSequenceTest, getRank_ok) {
@@ -55,8 +55,8 @@
 		Position pos1 = sequence.insertFirst(1);
 		Position pos2 = sequence.insertLast(2);
 		Position pos3 = sequence.insertLast(3);
-		EXPECT_EQ(1, sequence.getRank(pos2));
-		EXPECT_EQ(2, sequence.getRank(pos3));
+		EXPECT_EQ(1, sequence.getRankByPosition(pos2));
+		EXPECT_EQ(2, sequence.getRankByPosition(pos3));
 	}
 
 	TEST(NodeSequenceTest, getValueAtRank_ok) {
