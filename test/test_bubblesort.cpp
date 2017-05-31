@@ -6,7 +6,7 @@
  */
 
 # include "../include/NodeSequence.h"
-# include "../include/BubbleSort.cpp"
+# include "../src/BubbleSort.cpp"
 
 # include "stdio.h"
 # include "gtest/gtest.h"
@@ -30,7 +30,7 @@
 	TEST(BubbleSortTest, positionBasedSort_ok) {
 		Sequence seq;
 		BubbleSort<Sequence> bubble;
-		seq.addAll({4,1,2,5,3});
+		seq.addAll({4,1,2,5,3,8});
 		bubble.bubbleSort2(seq);
 		EXPECT_EQ(1, seq.getPositionByRank(0).getValue());
 		EXPECT_EQ(3, seq.getPositionByRank(2).getValue());
