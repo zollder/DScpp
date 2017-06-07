@@ -6,6 +6,7 @@
 #define INCLUDE_BTREE_H_
 
 #include "exceptions/InvalidPositionException.h"
+#include "exceptions/NotFoundException.h"
 
 #include <vector>
 #include "stdio.h"
@@ -77,7 +78,7 @@ class BTree {
 		}
 
 		~BTree() {
-//			clear();
+			clear();
 		}
 
 		/* Converts Positions to a NodePtr
@@ -106,16 +107,21 @@ class BTree {
 			return Position(getRoot());
 		}
 
-		Position find(const T& key) {
-			return Position(find(key));
+		Position find(const T& key) const throw (NotFoundException) {
+			NodePtr node = findKey(key);
+			if (node->isExternal()) {
+				throw NotFoundException("Key not found");
+			} else {
+				return Position(node);
+			}
 		}
 
 		Position insert(const T& key) {
 			return Position(insertKey(key));
 		}
 
-		Position remove(const Position& pos) {
-			return remove(getNodePtr(pos)->value);
+		bool remove(const T& key) {
+			return removeKey(key);
 		}
 
 		void clear() {
@@ -178,26 +184,25 @@ class BTree {
 			return node->isExternal();
 		}
 
-		NodePtr find(const T& key) const {
+		NodePtr findKey(const T& key) const {
 			return search(getRoot(), key);
 		}
 
 		NodePtr search(const NodePtr node, const T& key) const {
 			if (node->isExternal() || node->value == key) {
 				return node;
-			} else if (node->value < key) {
-				return search(getLeft(node), key);
+			} else if (node->value > key) {
+				return search(node->left, key);
 			} else {
-				return search(getRight(node), key);
+				return search(node->right, key);
 			}
 		}
 
 		NodePtr insertKey(const T& key) {
 			if (isEmpty()) {
-				root = new Node(key, new Node, new Node, nullptr);
-				sz++;
+				root = new Node;
 			}
-			NodePtr node = search(getRoot(), key);
+			NodePtr node = search(root, key);
 			if (node->isExternal()) {
 				expandExternal(node);
 				node->value = key;
@@ -219,22 +224,15 @@ class BTree {
 			node->value = val;
 		}
 
-		void swap(NodePtr node1, NodePtr node2) {
-			T value = node1->value;
-			node1->value = node2->value;
-			node2->value = value;
-		}
-
-		// TODO: complete
-		NodePtr remove(T& key) {
+		bool removeKey(const T& key) {
 			if (isEmpty()) {
-				return nullptr;	// throw an exception instead
+				return false;
 			}
 
-			NodePtr node = find(key);
+			NodePtr node = findKey(key);
 			// not found
 			if (node->isExternal()) {
-				return nullptr;	// throw an exception instead
+				return false;
 			}
 
 			if (node->isRoot() && size() == 1) {	// only root
@@ -242,49 +240,59 @@ class BTree {
 				delete node->right;
 				delete node;
 				sz--;
-				return nullptr;
+				return true;
 			}
 
 			// internal node found
-			if (node->left.isExternal()) {
+			if (node->left->isExternal()) {
 				removeAboveExternal(node->left);
-			} else if (node->right.isExternal()) {
+			} else if (node->right->isExternal()) {
 				removeAboveExternal(node->right);
 			} else {
 				NodePtr replacement = node->right;
 				while (!replacement->left->isExternal()) {
 					replacement = replacement->left;
 				}
-				swap(node, replacement);
-				removeAboveExternal(replacement);
+				swapElements(node, replacement);
+				removeAboveExternal(replacement->left);
 			}
-			return node;
+			return true;
 		}
 
-		NodePtr removeAboveExternal(NodePtr node) {
+		void removeAboveExternal(NodePtr node) {
 			NodePtr parent = node->parent;
 			if (!parent->isRoot()) {
 				NodePtr gp = parent->parent;
 				if (gp->left == parent) {
 					gp->left = node->getSibling();
+					gp->left->parent = gp;
 				} else {
 					gp->right = node->getSibling();
+					gp->right->parent = gp;
 				}
 			}
 			delete node;
 			delete parent;
 			sz--;
-			return parent;
+		}
+
+		void swapElements(NodePtr node1, NodePtr node2) {
+			T value = node1->value;
+			node1->value = node2->value;
+			node2->value = value;
 		}
 
 		void clear(NodePtr node) {
-			if (node->isExternal()) {
-				removeAboveExternal(node);
+			if (!node->isExternal()) {
+				NodePtr left = node->left;
+				NodePtr right = node->right;
+				delete node;
+				sz--;
+				clear(left);
+				clear(right);
 			} else {
-				clear(node->left);
-				clear(node->right);
+				delete node;
 			}
-
 		}
 };
 

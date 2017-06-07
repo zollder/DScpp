@@ -6,99 +6,88 @@
 # include "gtest/gtest.h"
 # include "../include/BTree.h"
 
-	typedef BTree<int> tree;
-	typedef tree::Position Position;
+	typedef BTree<int> Tree;
+	typedef Tree::Position Position;
 
 	TEST(BTreeTest, newTree) {
-		tree newTree;
-		EXPECT_EQ(0, newTree.size());
-		EXPECT_TRUE(newTree.isEmpty());
+		Tree tree;
+		EXPECT_EQ(0, tree.size());
+		EXPECT_TRUE(tree.isEmpty());
 	}
 
 	TEST(BTreeTest, insertRoot) {
-		tree newTree;
-		newTree.insert(10);
-		EXPECT_EQ(1, newTree.size());
-		EXPECT_FALSE(newTree.isEmpty());
-		EXPECT_EQ(10, newTree.getRootPosition().getValue());
+		Tree tree;
+		tree.insert(10);
+		EXPECT_EQ(1, tree.size());
+		EXPECT_FALSE(tree.isEmpty());
+		EXPECT_EQ(10, tree.getRootPosition().getValue());
 	}
 
-	TEST(BTreeTest, addAll) {
-		tree newTree;
-		newTree.addAll({10,7,15,5,9,20,12,17});
-		EXPECT_EQ(8, newTree.size());
-		EXPECT_FALSE(newTree.isEmpty());
-		EXPECT_EQ(10, newTree.getRootPosition().getValue());
+	TEST(BTreeTest, insertKey) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+
+		// insert existing keys
+		EXPECT_EQ(15, tree.insert(15).getValue());
+		EXPECT_EQ(5, tree.insert(5).getValue());
+		EXPECT_EQ(8, tree.size());
+
+		// insert non-existing keys
+		EXPECT_EQ(3, tree.insert(3).getValue());
+		EXPECT_EQ(11, tree.insert(11).getValue());
+		EXPECT_EQ(10, tree.size());
 	}
 
-/*	TEST(NodeListTest, first_last) {
-		nList list;
-		list.insertFirst(5);
-		list.insertFirst(10);
-		EXPECT_EQ(10, list.first().getValue());
-		EXPECT_EQ(5, list.last().getValue());
+	TEST(BTreeTest, findExistingKey) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+
+		EXPECT_EQ(9, tree.find(9).getValue());
+		EXPECT_EQ(20, tree.find(20).getValue());
 	}
 
-	TEST(NodeListTest, position_nullNode_isNull) {
-		Position pos;
-		EXPECT_TRUE(pos.isNull());
+	TEST(BTreeTest, findMissingKey) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		try {
+			tree.find(100).getValue();
+			FAIL() << "Test failed";
+		} catch (const NotFoundException& ex) {
+			EXPECT_EQ("Key not found", ex.getMessage());
+		} catch (...) {
+			FAIL() << "Wrong exception";
+		}
 	}
 
-	TEST(NodeListTest, insertFirst) {
-		nList list;
-		Position pos = list.insertFirst(5);
-		EXPECT_EQ(5, pos.getValue());
-		EXPECT_EQ(1, list.size());
-		EXPECT_TRUE(list.isFirst(pos));
-		EXPECT_TRUE(list.isLast(pos));
+	TEST(BTreeTest, remove_emptyTree) {
+		Tree tree;
+		EXPECT_FALSE(tree.remove(1));
 	}
 
-	TEST(NodeListTest, insertAfter) {
-		nList list;
-		Position pos = list.insertFirst(5);
-		Position posAfter = list.insertAfter(pos, 7);
-		EXPECT_EQ(7, list.after(pos).getValue());
-		EXPECT_EQ(2, list.size());
-		EXPECT_FALSE(list.isLast(pos));
-		EXPECT_TRUE(list.isLast(posAfter));
-	}*/
-
-/*	TEST(NodeListTest, insertBefore) {
-		nList list;
-		Position pos = list.insertFirst(5);
-		Position posAfter = list.insertAfter(pos, 7);
-		Position posBefore = list.insertBefore(pos, 11);
-		EXPECT_EQ(11, list.before(pos).getValue());
-		EXPECT_EQ(3, list.size());
-		EXPECT_FALSE(list.isFirst(pos));
-		EXPECT_TRUE(list.isFirst(posBefore));
+	TEST(BTreeTest, remove_missingKey) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		EXPECT_FALSE(tree.remove(100));
 	}
 
-	TEST(NodeListTest, replace) {
-		nList list;
-		list.insertFirst(5);
-		Position pos = list.insertFirst(7);
-		list.insertFirst(9);
-		list.replace(pos, 3);
-		EXPECT_EQ(3, pos.getValue());
+	TEST(BTreeTest, remove_existingKey) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		EXPECT_EQ(8, tree.size());
+
+		EXPECT_TRUE(tree.remove(15));
+		EXPECT_TRUE(tree.remove(17));
+		EXPECT_EQ(6, tree.size());
+
+		EXPECT_FALSE(tree.remove(15));
+		EXPECT_FALSE(tree.remove(17));
+		EXPECT_EQ(6, tree.size());
 	}
 
-	TEST(NodeListTest, swap) {
-		nList list;
-		Position pos1 = list.insertFirst(5);
-		Position pos2 = list.insertAfter(pos1, 7);
-		list.swap(pos1, pos2);
-		EXPECT_EQ(7, pos1.getValue());
-		EXPECT_EQ(5, pos2.getValue());
+	TEST(BTreeTest, clearTree) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		EXPECT_EQ(8, tree.size());
+		tree.clear();
+		EXPECT_EQ(0, tree.size());
 	}
-
-	TEST(NodeListTest, remove) {
-		nList list;
-		Position pos1 = list.insertFirst(5);
-		Position pos2 = list.insertAfter(pos1, 7);
-		EXPECT_EQ(2, list.size());
-		EXPECT_EQ(5, list.first().getValue());
-		list.remove(pos1);
-		EXPECT_EQ(1, list.size());
-		EXPECT_EQ(7, list.first().getValue());
-	}*/
