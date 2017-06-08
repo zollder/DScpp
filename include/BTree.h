@@ -91,12 +91,20 @@ class BTree {
 			}
 		}
 
+		bool isEmpty() const {
+			return sz == 0;
+		}
+
 		int size() const {
 			return sz;
 		}
 
-		bool isEmpty() const {
-			return sz == 0;
+		int depth(const Position& pos) {
+			return getNodeDepth(getNodePtr(pos));
+		}
+
+		int height(const Position& pos) {
+			return getNodeHeight(getNodePtr(pos));
 		}
 
 		bool isRoot(const Position& pos) const {
@@ -144,7 +152,22 @@ class BTree {
 			}
 		}
 
-		void print();
+		/** Depth-first tree traversal. */
+
+		/** Inorder printing of tree elements. */
+		void printInorder() {
+			inorder(getRoot());
+		}
+
+		/** Preorder printing of tree elements. */
+		void printPreorder() {
+			preorder(getRoot());
+		}
+
+		/** Postorder printing of tree elements. */
+		void printPostorder() {
+			postorder(getRoot());
+		}
 
 	protected:
 
@@ -182,6 +205,22 @@ class BTree {
 
 		bool isExternal(NodePtr node) {
 			return node->isExternal();
+		}
+
+		int getNodeDepth(NodePtr node) {
+			if (node->isRoot()) {
+				return 0;
+			} else {
+				return 1 + getNodeDepth(node->parent);
+			}
+		}
+
+		int getNodeHeight(NodePtr node) {
+			if (node->isExternal()) {
+				return 0;
+			} else {
+				return 1 + maxOf(getNodeHeight(node->left), getNodeHeight(node->right));
+			}
 		}
 
 		NodePtr findKey(const T& key) const {
@@ -292,6 +331,34 @@ class BTree {
 				clear(right);
 			} else {
 				delete node;
+			}
+		}
+
+		int maxOf(int num1, int num2) {
+			return num1 > num2 ? num1 : num2;
+		}
+
+		void inorder(NodePtr node) {
+			if (!node->isExternal()) {
+				inorder(node->left);
+				cout << node->getValue() << " ";
+				inorder(node->right);
+			}
+		}
+
+		void preorder(NodePtr node) {
+			if (!node->isExternal()) {
+				cout << node->getValue() << " ";
+				preorder(node->left);
+				preorder(node->right);
+			}
+		}
+
+		void postorder(NodePtr node) {
+			if (!node->isExternal()) {
+				postorder(node->left);
+				postorder(node->right);
+				cout << node->getValue() << " ";
 			}
 		}
 };

@@ -91,3 +91,35 @@
 		tree.clear();
 		EXPECT_EQ(0, tree.size());
 	}
+
+	TEST(BTreeTest, nodeDepth) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		EXPECT_EQ(1, tree.depth(tree.find(15)));
+		EXPECT_EQ(3, tree.depth(tree.find(17)));
+	}
+
+	TEST(BTreeTest, nodeHeight) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		EXPECT_EQ(3, tree.height(tree.find(15)));
+		EXPECT_EQ(1, tree.height(tree.find(17)));
+	}
+
+	TEST(BTreeTest, inorderPrint) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		tree.printInorder();
+	}
+
+	TEST(BTreeTest, preorderPrint) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		tree.printPreorder();
+	}
+
+	TEST(BTreeTest, postorderPrint) {
+		Tree tree;
+		tree.addAll({10,7,15,5,9,20,12,17});
+		tree.printPostorder();
+	}
