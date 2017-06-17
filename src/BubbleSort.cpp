@@ -5,13 +5,10 @@
  *      Author: zollder
  */
 
-# include "stdio.h"
-
 template <typename NodeSequence>
 class BubbleSort {
 
 	public:
-
 		/**
 		 * Rank-based bubble-sort implementation.
 		 */
@@ -45,5 +42,3 @@ class BubbleSort {
 			}
 		}
 };
-
-

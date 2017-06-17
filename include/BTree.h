@@ -154,17 +154,17 @@ class BTree {
 
 		/** Depth-first tree traversal. */
 
-		/** Inorder printing of tree elements. */
+		/** Inorder printing of tree elements (sorting). */
 		void printInorder() {
 			inorder(getRoot());
 		}
 
-		/** Preorder printing of tree elements. */
+		/** Preorder printing of tree elements (copying). */
 		void printPreorder() {
 			preorder(getRoot());
 		}
 
-		/** Postorder printing of tree elements. */
+		/** Postorder printing of tree elements (deletion). */
 		void printPostorder() {
 			postorder(getRoot());
 		}
